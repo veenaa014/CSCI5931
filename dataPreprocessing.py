@@ -14,22 +14,15 @@ files = os.listdir(raw_data_path)
 random.shuffle(files)
 train_files = files[: int(len(files) * train_percent)]
 test_files = files[int(len(files) * train_percent) + 1:]
-
-
 total_train_images = 0
 total_test_images = 0
-
-
 augment_times = 2
 
 input_shape = (256, 256)
-
-
 batch = 2000
-
-
 train_dump_counter = 0
 test_dump_counter = 0
+
 def dump_numpy(data, is_train_data=True):
 	global train_dump_counter, test_dump_counter
 	random.shuffle(data)
@@ -40,8 +33,7 @@ def dump_numpy(data, is_train_data=True):
 		test_dump_counter += 1
 		path = os.path.join(test_save_path, 'test_data_' + str(test_dump_counter))
 	np.save(path, data)
-
-
+	
 def create_data(files_path, is_train_data=True, augment_times=augment_times):
 	global total_test_images, total_train_images
 	bulk = []
@@ -60,23 +52,18 @@ def create_data(files_path, is_train_data=True, augment_times=augment_times):
 		except Exception as e:
 			print("error: ", e)
 			print("file name: ", image_path)
-
 		print("Proccessed: ", image_counter)
-
 		if len(bulk) >= batch or i == len(files_path):
 			print("Dumping batch: ", len(bulk))
 			dump_numpy(bulk, is_train_data=is_train_data)
 			bulk = []
-
 	if is_train_data:
 		total_train_images += image_counter
 	else:
 		total_test_images += image_counter
 
-
 print("CREATING TRAIN DATASET")
 create_data(train_files, is_train_data=True)
-
 
 print("CREATING TEST DATASET")
 create_data(test_files, is_train_data=False)
